@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import ThemeToggle from "../components/ThemeToggle";
+import Sidebar from "@/UI/sidebar/Sidebar";
 
 export const metadata: Metadata = {
 	title: "Wordle-GPT",
@@ -15,7 +15,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body>
-				<ThemeToggle />
+				<Sidebar />
 				{children}
 			</body>
 		</html>
