@@ -47,7 +47,15 @@ export default function Dot({
   useEffect(() => {
     setRevealedCount(0);
     setIsRevealing(true);
-  }, [text]);
+    
+    {/*--------- Start animation immediately ----------*/}
+    if (text.length > 0) {
+      const timer = setTimeout(() => {
+        setRevealedCount(1);
+      }, speed);
+      return () => clearTimeout(timer);
+    }
+  }, [text, speed]);
 
   return (
     <div className={`flex items-center ${className}`}>
