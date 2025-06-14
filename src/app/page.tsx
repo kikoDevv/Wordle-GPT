@@ -39,13 +39,11 @@ export default function Home() {
     <div className="grid w-full justify-center">
       {/*--------- input value section ----------*/}
       <section className="self-end mb-2 px-10">
-        <Dot text="hellow world" dotColor="bg-white" textColor="text-white"/>
-        <div className={`flex flex-col gap-2 w-full bg-neutral-600 rounded-t-2xl ${userInputs.length > 0 ? "py-3" : ""}`}>
-          {userInputs.length === 0 && (
-            <div className="flex justify-center">
-              <p className="text-white text-lg">Welcome to wordle game</p>
-            </div>
-          )}
+        <div className={`flex flex-col gap-2 w-full bg-neutral-600 rounded-t-2xl py-2`}>
+          {/*--------- friendly dot UI ----------*/}
+          <div className="flex w-full justify-center">
+            <Dot text="hellow world" dotColor="bg-white" textColor="text-white" speed={40} className="w-fit" />
+          </div>
           {userInputs.map((word, wordIndex) => (
             <div key={wordIndex} className="flex justify-center">
               {word.split("").map((letter, letterIndex) => (
