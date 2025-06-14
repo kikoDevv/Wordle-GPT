@@ -4,6 +4,7 @@ import { RiRestartLine, RiRestartFill } from "react-icons/ri";
 import { IoLockClosed, IoLockOpen, IoSendSharp } from "react-icons/io5";
 import { IoMdLogIn } from "react-icons/io";
 import DropDown from "@/components/buttons/dropDownMenu/dropDown";
+import Dot from "@/components/dot/Dot";
 
 export default function Home() {
   {
@@ -17,28 +18,44 @@ export default function Home() {
   }
   const createNewGame = () => {
     setRotationDegree((prev) => prev + 360);
+    setTimeout(() => {
+      window.location.reload();
+    }, 600);
   };
   {
     /*--------- input value ----------*/
   }
-  const [userInput, setUserInput] = useState("ABCDH");
+  const [userInputs, setUserInputs] = useState<string[]>([]);
   const [typingValue, setTypingValue] = useState("");
 
   const saveUserInput = () => {
-    setUserInput(typingValue);
-    setTypingValue("");
+    if (typingValue.trim() !== "") {
+      setUserInputs((prev) => [...prev, typingValue]);
+      setTypingValue("");
+    }
   };
 
   return (
     <div className="grid w-full justify-center">
-      <section className="self-end">
-        <div className="flex gap-2">
-          {userInput.split("").map((letter, index) => (
-            <h1
-              key={index}
-              className="flex justify-center items-center bg-red-600 text-white text-4xl w-10 h-10 rounded-md">
-              {letter}
-            </h1>
+      {/*--------- input value section ----------*/}
+      <section className="self-end mb-2 px-10">
+        <Dot text="hellow world" dotColor="bg-white" textColor="text-white"/>
+        <div className={`flex flex-col gap-2 w-full bg-neutral-600 rounded-t-2xl ${userInputs.length > 0 ? "py-3" : ""}`}>
+          {userInputs.length === 0 && (
+            <div className="flex justify-center">
+              <p className="text-white text-lg">Welcome to wordle game</p>
+            </div>
+          )}
+          {userInputs.map((word, wordIndex) => (
+            <div key={wordIndex} className="flex justify-center">
+              {word.split("").map((letter, letterIndex) => (
+                <h1
+                  key={letterIndex}
+                  className="flex justify-center ml-0.5 items-center bg-red-600 text-white text-4xl w-10 h-10 rounded-md">
+                  {letter}
+                </h1>
+              ))}
+            </div>
           ))}
         </div>
       </section>
