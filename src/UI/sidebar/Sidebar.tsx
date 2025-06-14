@@ -29,25 +29,25 @@ export default function Sidebar() {
           {/*--------- slider body ----------*/}
           <ul className="grid py-5">
             <li className="hover:bg-gray-800 hover:cursor-pointer pl-5 py-2 rounded-sm flex items-center text-gray-300 hover:text-white transition-colors">
-              <Link href="/" className="flex items-center" onClick={() => setIsOpen(false)}>
+              <Link href="/" className="flex items-center w-full" onClick={() => setIsOpen(false)}>
                 <IoGameController className="mr-3 text-lg" />
                 Play
               </Link>
             </li>
             <li className="hover:bg-gray-800 hover:cursor-pointer pl-5 py-2 rounded-sm flex items-center text-gray-300 hover:text-white transition-colors">
-              <Link href="/leaderBoard" className="flex items-center" onClick={() => setIsOpen(false)}>
+              <Link href="/leaderBoard" className="flex items-center w-full" onClick={() => setIsOpen(false)}>
                 <IoTrophy className="mr-3 text-lg" />
                 Leader board
               </Link>
             </li>
             <li className="hover:bg-gray-800 hover:cursor-pointer pl-5 py-2 rounded-sm flex items-center text-gray-300 hover:text-white transition-colors">
-              <Link href="/about" className="flex items-center" onClick={() => setIsOpen(false)}>
+              <Link href="/about" className="flex items-center w-full" onClick={() => setIsOpen(false)}>
                 <IoInformationCircle className="mr-3 text-lg" />
                 About
               </Link>
             </li>
             <li className="hover:bg-gray-800 hover:cursor-pointer pl-5 py-2 rounded-sm flex items-center text-gray-300 hover:text-white transition-colors">
-              <Link href="/myOther" className="flex items-center" onClick={() => setIsOpen(false)}>
+              <Link href="/myOther" className="flex items-center w-full" onClick={() => setIsOpen(false)}>
                 <IoFolder className="mr-3 text-lg" />
                 My other projects
               </Link>
