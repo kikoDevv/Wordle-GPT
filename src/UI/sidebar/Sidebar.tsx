@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 import { IoGameController, IoTrophy, IoInformationCircle, IoFolder, IoGrid } from "react-icons/io5";
 
 export default function Sidebar() {
@@ -28,20 +29,28 @@ export default function Sidebar() {
           {/*--------- slider body ----------*/}
           <ul className="grid py-5">
             <li className="hover:bg-gray-800 hover:cursor-pointer pl-5 py-2 rounded-sm flex items-center text-gray-300 hover:text-white transition-colors">
-              <IoGameController className="mr-3 text-lg" />
-              Play
+              <Link href="/" className="flex items-center" onClick={() => setIsOpen(false)}>
+                <IoGameController className="mr-3 text-lg" />
+                Play
+              </Link>
             </li>
             <li className="hover:bg-gray-800 hover:cursor-pointer pl-5 py-2 rounded-sm flex items-center text-gray-300 hover:text-white transition-colors">
-              <IoTrophy className="mr-3 text-lg" />
-              Leader board
+              <Link href="/leaderBoard" className="flex items-center" onClick={() => setIsOpen(false)}>
+                <IoTrophy className="mr-3 text-lg" />
+                Leader board
+              </Link>
             </li>
             <li className="hover:bg-gray-800 hover:cursor-pointer pl-5 py-2 rounded-sm flex items-center text-gray-300 hover:text-white transition-colors">
-              <IoInformationCircle className="mr-3 text-lg" />
-              About
+              <Link href="/about" className="flex items-center" onClick={() => setIsOpen(false)}>
+                <IoInformationCircle className="mr-3 text-lg" />
+                About
+              </Link>
             </li>
             <li className="hover:bg-gray-800 hover:cursor-pointer pl-5 py-2 rounded-sm flex items-center text-gray-300 hover:text-white transition-colors">
-              <IoFolder className="mr-3 text-lg" />
-              My other projects
+              <Link href="/myOther" className="flex items-center" onClick={() => setIsOpen(false)}>
+                <IoFolder className="mr-3 text-lg" />
+                My other projects
+              </Link>
             </li>
           </ul>
           {/*--------- slider foot ----------*/}
