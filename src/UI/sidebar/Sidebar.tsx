@@ -64,7 +64,9 @@ export default function Sidebar() {
       <button
         onClick={() => setIsOpen(true)}
         className={`fixed top-4 left-4 z-50 ${
-          isOpen ? "opacity-0 scale-10 transition-all duration-200 ease-in-out" : "opacity-100 hover:cursor-pointer scale-150 transition-all duration-900 ease-in-out"
+          isOpen
+            ? "opacity-0 scale-10 transition-all duration-200 ease-in-out"
+            : "opacity-100 hover:cursor-pointer scale-150 transition-all duration-900 ease-in-out"
         }`}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" xmlns="http://www.w3.org/2000/svg">
           <path
