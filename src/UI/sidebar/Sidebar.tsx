@@ -9,10 +9,10 @@ export default function Sidebar() {
     <>
       {/*--------- condition ----------*/}
       <div
-        className={`bg-neutral-900 h-dvh flex flex-col transition-all duration-500 ease-in-out ${
-          isOpen ? "w-60 translate-x-0" : "w-0 -translate-x-full"
+        className={`bg-neutral-900 h-dvh flex flex-col transition-all duration-500 ease-in-out shadow-1xl shadow-black/50 ${
+          isOpen ? "translate-x-0 w-68" : "w-0 -translate-x-full"
         } overflow-hidden`}>
-        <div className="w-60 h-full flex flex-col">
+        <div className={`w-60 h-full flex flex-col${!isOpen ? " hidden" : ""}`}>
           {/*--------- slider head ----------*/}
           <div className="flex items-center p-5 select-none">
             <IoGrid className="mr-3 text-xl text-blue-400" />
@@ -63,8 +63,8 @@ export default function Sidebar() {
       {/*--------- sidebar button in home ----------*/}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed top-4 left-4 z-50 transition-all duration-500 ease-in-out ${
-          isOpen ? "opacity-0 scale-10" : "opacity-100 hover:cursor-pointer scale-150"
+        className={`fixed top-4 left-4 z-50 ${
+          isOpen ? "opacity-0 scale-10 transition-all duration-200 ease-in-out" : "opacity-100 hover:cursor-pointer scale-150 transition-all duration-900 ease-in-out"
         }`}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" xmlns="http://www.w3.org/2000/svg">
           <path
