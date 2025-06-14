@@ -70,7 +70,7 @@ export default function Home() {
         <div className={`flex flex-col gap-2 w-full bg-neutral-600 rounded-t-2xl py-2`}>
           {/*--------- friendly dot UI ----------*/}
           <div className="flex w-full justify-center">
-            <Dot text={isDotSaying} dotColor="bg-white" textColor="text-white text-sm" speed={40} className="w-fit" />
+            <Dot text={isDotSaying} dotColor="bg-white" textColor="text-white text-sm" speed={20} className="w-fit" />
           </div>
           {userInputs.map((word, wordIndex) => (
             <div key={wordIndex} className="flex justify-center">
