@@ -30,16 +30,18 @@ export default function Home() {
 
   const saveUserInput = () => {
     if (typingValue.trim() !== "") {
-      setUserInputs((prev) => [...prev, typingValue]);
+      setUserInputs((prev) => [...prev, typingValue.trim()]);
       setTypingValue("");
     }
   };
 
-  {/*--------- Dots proms ----------*/}
-  const [isDotSaying, setDotSaying] = useState ("Welcome to Wordle-GPT");
-  const dotPromps = () => {
-    setDotSaying ("The game is on!")
+  {
+    /*--------- Dots proms ----------*/
   }
+  const [isDotSaying, setDotSaying] = useState("Welcome to Wordle-GPT");
+  const dotPromps = () => {
+    setDotSaying("The game is on!");
+  };
   return (
     <div className="grid w-full justify-center">
       {/*--------- input value section ----------*/}
@@ -51,13 +53,16 @@ export default function Home() {
           </div>
           {userInputs.map((word, wordIndex) => (
             <div key={wordIndex} className="flex justify-center">
-              {word.split("").map((letter, letterIndex) => (
-                <h1
-                  key={letterIndex}
-                  className="flex justify-center ml-0.5 items-center bg-red-600 text-white text-4xl w-10 h-10 rounded-md">
-                  {letter}
-                </h1>
-              ))}
+              {word.split("").map(
+                (letter, letterIndex) =>
+                  letter.trim() !== "" && (
+                    <h1
+                      key={letterIndex}
+                      className="flex justify-center ml-0.5 items-center bg-red-600 text-white text-4xl w-10 h-10 rounded-md">
+                      {letter}
+                    </h1>
+                  )
+              )}
             </div>
           ))}
         </div>
@@ -143,7 +148,12 @@ export default function Home() {
             </div>
           </section>
           {/*--------- send button ----------*/}
-          <button className="bg-white px-2 py-2 rounded-full cursor-pointer" onClick={saveUserInput, dotPromps}>
+          <button
+            className="bg-white px-2 py-2 rounded-full cursor-pointer"
+            onClick={() => {
+              saveUserInput();
+              dotPromps();
+            }}>
             <IoSendSharp className="scale-140 rotate-270" />
           </button>
         </div>

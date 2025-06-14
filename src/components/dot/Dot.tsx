@@ -47,7 +47,7 @@ export default function Dot({
   useEffect(() => {
     setRevealedCount(0);
     setIsRevealing(true);
-    
+
     {/*--------- Start animation immediately ----------*/}
     if (text.length > 0) {
       const timer = setTimeout(() => {
@@ -60,7 +60,7 @@ export default function Dot({
   return (
     <div className={`flex items-center ${className}`}>
       <span className={`${textColor} font-mono`}>{text.slice(0, revealedCount)}</span>
-      <span className={`w-4 h-4 ${dotColor} rounded-full ml-1 animate-pulse`} />
+      <span className={`w-5 h-5 ${dotColor} rounded-full ml-1 animate-pulse`} />
     </div>
   );
 }
