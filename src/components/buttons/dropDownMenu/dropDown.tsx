@@ -13,7 +13,7 @@ export default function DropDown() {
   return (
     <div className="grid relative">
       <button
-        className="bg-neutral-700 text-white font-medium rounded-full px-3 py-1 cursor-pointer hover:bg-neutral-600"
+        className="bg-neutral-800 text-white font-medium rounded-full px-3 py-1 cursor-pointer hover:bg-neutral-700"
         onClick={() => setDropDownOpen(!isDropDownOpen)}>
         {wordLength === 0 ? (
           <div className="flex items-center gap-1">
