@@ -4,7 +4,7 @@ import Link from "next/link";
 import { IoGameController, IoTrophy, IoInformationCircle, IoFolder, IoGrid } from "react-icons/io5";
 
 export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <>
       {/*--------- condition ----------*/}
