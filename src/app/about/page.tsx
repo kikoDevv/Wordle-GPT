@@ -5,15 +5,18 @@ import { RiGamepadLine, RiPaletteLine, RiRocketLine } from "react-icons/ri";
 import Dot from "@/components/dot/Dot";
 
 export default function AboutPage() {
-  const dotIntro = ["Welcome to about Wordle-GPT", "Reveal you skills", "Compare your score with others", "Dont be to hard on urself, try cheat mode", "Toggle between different word lenght"];
+  const dotIntro = [
+    "Welcome to about Wordle-GPT",
+    "Reveal you skills",
+    "Compare your score with others",
+    "Dont be to hard on urself, try cheat mode",
+    "Toggle between different word lenght",
+  ];
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [key, setKey] = useState(0);
 
   useEffect(() => {
-
-
     const totalAnimationTime = 7000;
-
     const timer = setTimeout(() => {
       setCurrentMessageIndex((prevIndex) => (prevIndex + 1) % dotIntro.length);
       setKey((prev) => prev + 1);

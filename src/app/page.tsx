@@ -12,15 +12,15 @@ export default function Home() {
   }
   const [isRepeat, setRepeat] = useState(false);
   const [isCheating, setCheating] = useState(false);
-  const [rotationDegree, setRotationDegree] = useState(0);
+  const [isSpinning, setIsSpinning] = useState(false);
   {
     /*--------- functions ----------*/
   }
   const createNewGame = () => {
-    setRotationDegree((prev) => prev + 360);
+    setIsSpinning(true); // Start continuous spinning
     setTimeout(() => {
       window.location.reload();
-    }, 600);
+    }, 4000);
   };
   {
     /*--------- input value ----------*/
@@ -36,12 +36,33 @@ export default function Home() {
   };
 
   {
-    /*--------- Dots proms ----------*/
+    /*--------- Dots proms logic ----------*/
   }
   const [isDotSaying, setDotSaying] = useState("Welcome to Wordle-GPT");
-  const dotPromps = () => {
+  const dotPromp1 = () => {
     setDotSaying("The game is on!");
   };
+  const dotProm2 = () => {
+    if (isRepeat) {
+      setDotSaying("Repeated letter deactivated");
+    } else {
+      setDotSaying("Repeated letter activated!");
+    }
+  };
+  const dotProm3 = () => {
+    if (isCheating) {
+      setDotSaying("Cheat mode deactivated!");
+    } else {
+      setDotSaying("You nasty, Cheat mode activated!");
+    }
+  };
+  // const dotProm4 = () => {
+  //   setDotSaying("Word lenght is selected!");
+  // };
+  const dotProm5 = () => {
+    setDotSaying("New game is about to start!");
+  };
+
   return (
     <div className="grid w-full justify-center">
       {/*--------- input value section ----------*/}
@@ -78,7 +99,7 @@ export default function Home() {
           onKeyDown={(e) => {
             if (e.key === "Enter" && typingValue.trim() !== "") {
               saveUserInput();
-              dotPromps();
+              dotPromp1();
             }
           }}
         />
@@ -89,7 +110,10 @@ export default function Home() {
             {/*---------repeat btn----------*/}
             <div className="flex">
               <button
-                onClick={() => setRepeat(!isRepeat)}
+                onClick={() => {
+                  setRepeat(!isRepeat);
+                  dotProm2();
+                }}
                 className="bg-neutral-800 pl-3 pr-1 py-1 text-white rounded-full hover:bg-neutral-700 cursor-pointer transition-all duration-300 text-center flex items-center gap-2 relative overflow-hidden">
                 <p className="font-medium">Repeat</p>
                 <div className="relative w-6 h-6 flex items-center justify-center">
@@ -109,7 +133,10 @@ export default function Home() {
             {/*---------cheat btn----------*/}
             <div className="flex">
               <button
-                onClick={() => setCheating(!isCheating)}
+                onClick={() => {
+                  setCheating(!isCheating);
+                  dotProm3();
+                }}
                 className="bg-neutral-800 pl-3 pr-1 py-1 text-white rounded-full hover:bg-neutral-700 cursor-pointer transition-all duration-300 text-center flex items-center gap-2 relative overflow-hidden">
                 <p className="font-medium">Cheat</p>
                 <div className="relative w-6 h-6 flex items-center justify-center">
@@ -135,13 +162,17 @@ export default function Home() {
             {/*--------- new game button ----------*/}
             <div className="flex">
               <button
-                onClick={() => createNewGame()}
+                onClick={() => {
+                  createNewGame();
+                  dotProm5();
+                }}
                 className="bg-neutral-800 pl-3 pr-1 py-1 text-white rounded-full hover:bg-neutral-700 cursor-pointer transition-all duration-300 text-center flex items-center gap-2 relative overflow-hidden">
                 <p className="font-medium">New game</p>
                 <div className="relative w-6 h-6 flex items-center justify-center">
                   <IoMdLogIn
-                    className="text-xl text-green-400 transition-all duration-600 ease-out opacity-100 scale-100"
-                    style={{ transform: `rotate(${rotationDegree}deg)` }}
+                    className={`text-xl text-green-400 transition-all ease-out opacity-100 scale-100 ${
+                      isSpinning ? "animate-spin" : "duration-300"
+                    }`}
                   />
                 </div>
               </button>
@@ -153,7 +184,7 @@ export default function Home() {
             onClick={() => {
               if (typingValue.trim() !== "") {
                 saveUserInput();
-                dotPromps();
+                dotPromp1();
               }
             }}>
             <IoSendSharp className="scale-140 rotate-270" />
