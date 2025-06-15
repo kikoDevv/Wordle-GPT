@@ -63,7 +63,7 @@ export default function Sidebar() {
       {/*--------- sidebar button in home ----------*/}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed top-4 left-4 z-50 ${
+        className={`fixed top-8 left-8 z-50 ${
           isOpen
             ? "opacity-0 scale-10 transition-all duration-200 ease-in-out"
             : "opacity-100 hover:cursor-pointer scale-150 transition-all duration-900 ease-in-out"

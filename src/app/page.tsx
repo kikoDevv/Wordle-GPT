@@ -70,7 +70,13 @@ export default function Home() {
         <div className={`flex flex-col gap-2 w-full bg-neutral-600 rounded-t-2xl py-2`}>
           {/*--------- friendly dot UI ----------*/}
           <div className="flex w-full justify-center">
-            <Dot text={isDotSaying} dotColor="bg-white" textColor={`${DotColor} text-sm`} speed={20} className="w-fit" />
+            <Dot
+              text={isDotSaying}
+              dotColor="bg-white"
+              textColor={`${DotColor} text-sm`}
+              speed={20}
+              className="w-fit"
+            />
           </div>
           {userInputs.map((word, wordIndex) => (
             <div key={wordIndex} className="flex justify-center">
@@ -180,17 +186,20 @@ export default function Home() {
           </section>
           {/*--------- send button ----------*/}
           <button
-            className="bg-white px-2 py-2 rounded-full cursor-pointer"
+            className="bg-white px-2 py-2 rounded-full cursor-pointer hover:bg-green-400 hover:scale-109 hover:text-amber-100 transition-all duration-300"
             onClick={() => {
               if (typingValue.trim() !== "") {
                 saveUserInput();
                 dotPromp1();
               }
             }}>
-            <IoSendSharp className="scale-140 rotate-270" />
+            <IoSendSharp className="scale-140 rotate-270 hover:scale-150" />
           </button>
         </div>
       </div>
+        <p className="fixed text-center text-xs text-gray-500 bottom-2 left-1/2 transform -translate-x-1/2">
+          © 2025 KikoDevv. Inspired by ChatGPT UI. All rights reserved.
+        </p>
     </div>
   );
 }
