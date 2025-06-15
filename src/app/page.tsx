@@ -40,9 +40,16 @@ export default function Home() {
   }
   const [isDotSaying, setDotSaying] = useState("Welcome to Wordle-GPT");
   const [DotColor, setDotColor] = useState("text-white");
+  const [dotKey, setDotKey] = useState(0);
+  const dotPromp0 = () => {
+    setDotSaying("Input connot be empty!");
+    setDotColor("text-red-500");
+    setDotKey((prev) => prev + 1);
+  };
   const dotPromp1 = () => {
     setDotSaying("The game is on!");
     setDotColor("text-white");
+    setDotKey((prev) => prev + 1);
   };
   const dotProm2 = () => {
     setDotColor("text-yellow-300");
@@ -71,6 +78,7 @@ export default function Home() {
           {/*--------- friendly dot UI ----------*/}
           <div className="flex w-full justify-center">
             <Dot
+              key={dotKey}
               text={isDotSaying}
               dotColor="bg-white"
               textColor={`${DotColor} text-sm`}
@@ -103,9 +111,13 @@ export default function Home() {
           value={typingValue}
           onChange={(e) => setTypingValue(e.target.value.toUpperCase())}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && typingValue.trim() !== "") {
-              saveUserInput();
-              dotPromp1();
+            if (e.key === "Enter") {
+              if (typingValue.trim() !== "") {
+                saveUserInput();
+                dotPromp1();
+              } else {
+                dotPromp0();
+              }
             }
           }}
         />
@@ -191,15 +203,17 @@ export default function Home() {
               if (typingValue.trim() !== "") {
                 saveUserInput();
                 dotPromp1();
+              } else {
+                dotPromp0();
               }
             }}>
             <IoSendSharp className="scale-140 rotate-270 hover:scale-150" />
           </button>
         </div>
       </div>
-        <p className="fixed text-center text-xs text-gray-500 bottom-2 left-1/2 transform -translate-x-1/2">
-          © 2025 KikoDevv. Inspired by ChatGPT UI. All rights reserved.
-        </p>
+      <p className="fixed text-center text-xs text-gray-500 bottom-2 left-1/2 transform -translate-x-1/2">
+        © 2025 KikoDevv. Inspired by ChatGPT UI. All rights reserved.
+      </p>
     </div>
   );
 }
