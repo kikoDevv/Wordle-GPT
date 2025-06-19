@@ -28,9 +28,17 @@ export default function Home() {
   const [userInputs, setUserInputs] = useState<string[]>([]);
   const [typingValue, setTypingValue] = useState("");
 
-  const saveUserInput = () => {
+  const saveUserInput = async () => {
     if (typingValue.trim() !== "") {
       setUserInputs((prev) => [...prev, typingValue.trim()]);
+
+      //--------------send user input to api-----------
+      await fetch("/api/game", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ guess: typingValue.trim() }),
+      });
+
       setTypingValue("");
     }
   };

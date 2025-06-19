@@ -26,7 +26,6 @@ const compare = (selectedWord: string, guessedWord: string): string[] => {
   return result;
 };
 
-
 /*------------------- get words by lenghts -------------------*/
 const getWordsByLength = (wordsLength: number, repeat: boolean): string[] => {
   if (repeat) {
@@ -49,3 +48,6 @@ const getRandomWord = (words: string[]): string[] => {
   const randomIndex = Math.floor(Math.random() * words.length);
   return words[randomIndex].split("");
 };
+
+/*------------------- Export Functions -------------------*/
+export { compare, getWordsByLength, getRandomWord };
