@@ -171,7 +171,7 @@ export default function Home() {
                 </div>
               </button>
             </div>
-            {/*---------drop down menu, wordlenght button----------*/}
+            {/*---------drop down menu, wordlenght button-----------*/}
             <div className="relative w-24">
               <div className="absolute w-full">
                 <DropDown />
