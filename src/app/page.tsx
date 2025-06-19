@@ -52,7 +52,7 @@ export default function Home() {
     setDotKey((prev) => prev + 1);
   };
   const dotProm2 = () => {
-    setDotColor("text-yellow-300");
+    setDotColor("text-green-400");
     if (isRepeat) {
       setDotSaying("Repeated letter deactivated");
     } else {
@@ -73,7 +73,7 @@ export default function Home() {
   return (
     <div className="grid w-full justify-center">
       {/*--------- input value section ----------*/}
-      <section className="self-end mb-2 px-10">
+      <section className="self-end mb-1 px-10">
         <div className={`flex flex-col gap-2 w-full bg-neutral-600 rounded-t-2xl py-2`}>
           {/*--------- friendly dot UI ----------*/}
           <div className="flex w-full justify-center">
