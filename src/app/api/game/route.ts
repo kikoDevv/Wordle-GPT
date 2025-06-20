@@ -7,8 +7,8 @@ export async function POST(request: NextRequest) {
   /*------------------- Create a game ID -------------------*/
   const gameId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
   /*------------------- Get user input -------------------*/
-  const body = await request.json();
-  const userInput = body.guess;
+  const data = await request.json();
+  const userInput = data.guess;
   console.log("API Received userInput--------------------------------------->", userInput);
   /*------------------- Send to fronEnd -------------------*/
   return NextResponse.json({

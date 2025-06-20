@@ -32,18 +32,26 @@ export default function Home() {
   const saveUserInput = async () => {
     if (typingValue.trim() !== "") {
       setUserInputs((prev) => [...prev, typingValue.trim()]);
-
+      {/*--------- game/route ----------*/}
       const response = await fetch("/api/game", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ guess: typingValue.trim() }),
       });
-
-      {/*--------- Resived respons from BackEnd ----------*/}
+      {/*--------- Resived respons from game route ----------*/}
       const data = await response.json();
       console.log("client: Time received from api:", data.receivedAt);
       console.log("Client: resived userInput from api", data.receivedInput);
       console.log("Client: gererated gameID--> ", data.gameId)
+      {/*--------- guess/route ----------*/}
+      const res = await fetch("api/guess", {
+        method: "POST",
+        headers: {"Content-type": "application/json"},
+        body: JSON.stringify({guess: typingValue.trim()}),
+      });
+      {/*--------- Resived respons from guess route ----------*/}
+      const validation = await res.json();
+      console.log("Client: Resived validation from guess--->", validation);
       setTypingValue("");
     }
   };
