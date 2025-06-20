@@ -7,85 +7,127 @@ import DropDown from "@/components/buttons/dropDownMenu/dropDown";
 import Dot from "@/components/dot/Dot";
 
 export default function Home() {
-  {
-    /*--------- buttons state ----------*/
-  }
+  /*--------- buttons state ----------*/
   const [isRepeat, setRepeat] = useState(false);
   const [isCheating, setCheating] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
   const randomWordLenght = Math.floor(Math.random() * (6 - 2 + 1)) + 2;
   const [selectedWordLength, setSelectedWordLength] = useState(randomWordLenght);
 
-  {
-    /*--------- logic for random wordLenght ----------*/
-  }
+  /*--------- logic for random wordLenght ----------*/
+
   const handleWordLengthChange = (length: number) => {
     console.log("word lenght changed!");
+
+    // Reset game state when word length changes
+    setUserInputs([]);
+    setGuessResults([]);
+    setIsGameWon(false);
+    setTargetWord("");
+    setTypingValue("");
+
     if (length === 0) {
       setSelectedWordLength(randomWordLenght);
-      setDotSaying(`Word length has changed to ${randomWordLenght}`);
+      setDotSaying(`Word length has changed to ${randomWordLenght}. New game started!`);
     } else {
       setSelectedWordLength(length);
-      setDotSaying(`Word length has changed to ${length}`);
+      setDotSaying(`Word length has changed to ${length}. New game started!`);
     }
+    setDotColor("text-blue-400");
+    setDotKey((prev) => prev + 1);
   };
-  {
-    /*--------- functions ----------*/
-  }
+
+  /*--------- functions ----------*/
   const createNewGame = () => {
     setIsSpinning(true);
+    setUserInputs([]);
+    setGuessResults([]);
+    setIsGameWon(false);
+    setTargetWord("");
+    setTypingValue("");
+    setDotSaying("New game started!");
+    setDotColor("text-green-400");
+    setDotKey((prev) => prev + 1);
+
     setTimeout(() => {
-      window.location.reload();
-    }, 4000);
+      setIsSpinning(false);
+    }, 2000);
   };
-  {
-    /*--------- input value ----------*/
-  }
+
+  /*--------- input value ----------*/
   const [userInputs, setUserInputs] = useState<string[]>([]);
   const [typingValue, setTypingValue] = useState("");
+  const [guessResults, setGuessResults] = useState<string[][]>([]);
+  const [isGameWon, setIsGameWon] = useState(false);
+  const [targetWord, setTargetWord] = useState<string>("");
 
   //------------------Send user input and resive respons from backend-----------------
   const saveUserInput = async () => {
     if (typingValue.trim() !== "") {
+      if (typingValue.length !== selectedWordLength) {
+        setDotSaying(`Input must be exactly ${selectedWordLength} characters long!`);
+        setDotColor("text-red-500");
+        setDotKey((prev) => prev + 1);
+        return;
+      }
+
       setUserInputs((prev) => [...prev, typingValue.trim()]);
-      {
-        /*--------- game/route ----------*/
-      }
-      const response = await fetch("/api/game", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ guess: typingValue.trim() }),
-      });
-      {
-        /*--------- Resived respons from game route ----------*/
-      }
-      const data = await response.json();
-      console.log("client: Time received from api:", data.receivedAt);
-      console.log("Client: resived userInput from api", data.receivedInput);
-      console.log("Client: gererated gameID--> ", data.gameId);
-      {
+
+      try {
         /*--------- guess/route ----------*/
+        const res = await fetch("api/guess", {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({
+            userInput: typingValue.trim(),
+            wordLengh: selectedWordLength,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setDotSaying(data.error || "Something went wrong!");
+          setDotColor("text-red-500");
+          setDotKey((prev) => prev + 1);
+          // Remove the input from the list since it was invalid
+          setUserInputs((prev) => prev.slice(0, -1));
+          return;
+        }
+
+        /*--------- Received response from guess route ----------*/
+        console.log("Client: Received validation from guess--->", data.feedback);
+
+        // Store the feedback for this guess
+        setGuessResults((prev) => [...prev, data.feedback]);
+
+        // Check if game is won
+        if (data.isWon) {
+          setIsGameWon(true);
+          setTargetWord(data.targetWord);
+          setDotSaying(`🎉 Congratulations! You guessed the word: ${data.targetWord}`);
+          setDotColor("text-green-400");
+          setDotKey((prev) => prev + 1);
+        } else {
+          setDotSaying("Keep trying! You can do it!");
+          setDotColor("text-blue-400");
+          setDotKey((prev) => prev + 1);
+        }
+      } catch (error) {
+        console.error("Error submitting guess:", error);
+        setDotSaying("Connection error! Please try again.");
+        setDotColor("text-red-500");
+        setDotKey((prev) => prev + 1);
+        // Remove the input from the list since there was an error
+        setUserInputs((prev) => prev.slice(0, -1));
       }
-      const res = await fetch("api/guess", {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({
-          guess: typingValue.trim(),
-          wordLengh: selectedWordLength,
-        }),
-      });
-      {
-        /*--------- Resived respons from guess route ----------*/
-      }
-      const validation = await res.json();
-      console.log("Client: Resived validation from guess--->", validation.gameStatus);
+
       setTypingValue("");
     }
   };
 
-  {
-    /*--------- Dots proms logic ----------*/
-  }
+  /*--------- Dots proms logic ----------*/
+
   const [isDotSaying, setDotSaying] = useState("Welcome to Wordle-GPT");
   const [DotColor, setDotColor] = useState("text-white");
   const [dotKey, setDotKey] = useState(0);
@@ -136,16 +178,22 @@ export default function Home() {
           </div>
           {userInputs.map((word, wordIndex) => (
             <div key={wordIndex} className="flex justify-center">
-              {word.split("").map(
-                (letter, letterIndex) =>
+              {word.split("").map((letter, letterIndex) => {
+                // Get the feedback for this guess and letter
+                const feedback = guessResults[wordIndex]?.[letterIndex] || "absent";
+                const bgColor =
+                  feedback === "correct" ? "bg-green-600" : feedback === "present" ? "bg-yellow-600" : "bg-gray-600";
+
+                return (
                   letter.trim() !== "" && (
                     <h1
                       key={letterIndex}
-                      className="flex justify-center ml-0.5 items-center bg-red-600 text-white text-4xl w-10 h-10 rounded-md">
+                      className={`flex justify-center ml-0.5 items-center ${bgColor} text-white text-4xl w-10 h-10 rounded-md`}>
                       {letter}
                     </h1>
                   )
-              )}
+                );
+              })}
             </div>
           ))}
         </div>
@@ -155,8 +203,9 @@ export default function Home() {
         <input
           type="text"
           placeholder="Type your word here"
-          className="focus:outline-none border-none uppercase placeholder:normal-case"
+          className="focus:outline-none border-none uppercase placeholder:normal-case disabled:bg-gray-100 disabled:text-gray-500"
           value={typingValue}
+          disabled={isGameWon}
           onChange={(e) => {
             const newValue = e.target.value.toUpperCase();
             if (newValue.length <= selectedWordLength) {
@@ -164,7 +213,7 @@ export default function Home() {
             }
           }}
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
+            if (e.key === "Enter" && !isGameWon) {
               if (typingValue.trim() !== "") {
                 saveUserInput();
                 dotPromp1();
@@ -251,12 +300,17 @@ export default function Home() {
           </section>
           {/*--------- send button ----------*/}
           <button
-            className="bg-white px-2 py-2 rounded-full cursor-pointer hover:bg-green-400 hover:scale-109 hover:text-amber-100 transition-all duration-300"
+            className={`px-2 py-2 rounded-full cursor-pointer transition-all duration-300 ${
+              isGameWon
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-white hover:bg-green-400 hover:scale-109 hover:text-amber-100"
+            }`}
+            disabled={isGameWon}
             onClick={() => {
-              if (typingValue.trim() !== "") {
+              if (!isGameWon && typingValue.trim() !== "") {
                 saveUserInput();
                 dotPromp1();
-              } else {
+              } else if (!isGameWon) {
                 dotPromp0();
               }
             }}>
