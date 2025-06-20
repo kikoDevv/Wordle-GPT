@@ -16,10 +16,10 @@ const compare = (selectedWord: string, guessedWord: string): string[] => {
       result.push("correct");
     } else if (selectedLetters.includes(guessLetter)) {
       // Letter is in word but wrong position
-      result.push("misplaced");
+      result.push("present");
     } else {
       // Letter is not in word
-      result.push("wrong");
+      result.push("absent");
     }
   }
 

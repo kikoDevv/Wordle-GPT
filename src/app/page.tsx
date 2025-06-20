@@ -17,21 +17,18 @@ export default function Home() {
   /*--------- logic for random wordLenght ----------*/
 
   const handleWordLengthChange = (length: number) => {
-    console.log("word lenght changed!");
-
-    // Reset game state when word length changes
+    /*--------- Reset game state when word length changes ----------*/
     setUserInputs([]);
     setGuessResults([]);
     setIsGameWon(false);
-    setTargetWord("");
     setTypingValue("");
 
     if (length === 0) {
       setSelectedWordLength(randomWordLenght);
-      setDotSaying(`Word length has changed to ${randomWordLenght}. New game started!`);
+      setDotSaying(`Length changed to ${randomWordLenght}.Game started!`);
     } else {
       setSelectedWordLength(length);
-      setDotSaying(`Word length has changed to ${length}. New game started!`);
+      setDotSaying(`Length changed to ${length}.Game started!`);
     }
     setDotColor("text-blue-400");
     setDotKey((prev) => prev + 1);
@@ -43,7 +40,6 @@ export default function Home() {
     setUserInputs([]);
     setGuessResults([]);
     setIsGameWon(false);
-    setTargetWord("");
     setTypingValue("");
     setDotSaying("New game started!");
     setDotColor("text-green-400");
@@ -59,13 +55,12 @@ export default function Home() {
   const [typingValue, setTypingValue] = useState("");
   const [guessResults, setGuessResults] = useState<string[][]>([]);
   const [isGameWon, setIsGameWon] = useState(false);
-  const [targetWord, setTargetWord] = useState<string>("");
 
   //------------------Send user input and resive respons from backend-----------------
   const saveUserInput = async () => {
     if (typingValue.trim() !== "") {
       if (typingValue.length !== selectedWordLength) {
-        setDotSaying(`Input must be exactly ${selectedWordLength} characters long!`);
+        setDotSaying(`Input must be ${selectedWordLength} long!`);
         setDotColor("text-red-500");
         setDotKey((prev) => prev + 1);
         return;
@@ -81,6 +76,7 @@ export default function Home() {
           body: JSON.stringify({
             userInput: typingValue.trim(),
             wordLengh: selectedWordLength,
+            isRepeat: isRepeat,
           }),
         });
 
@@ -104,12 +100,11 @@ export default function Home() {
         // Check if game is won
         if (data.isWon) {
           setIsGameWon(true);
-          setTargetWord(data.targetWord);
-          setDotSaying(`🎉 Congratulations! You guessed the word: ${data.targetWord}`);
+          setDotSaying(`🎉 Nicely done! You guessed the word: ${data.targetWord}`);
           setDotColor("text-green-400");
           setDotKey((prev) => prev + 1);
         } else {
-          setDotSaying("Keep trying! You can do it!");
+          setDotSaying("Wrong! Keep trying!");
           setDotColor("text-blue-400");
           setDotKey((prev) => prev + 1);
         }
@@ -144,10 +139,11 @@ export default function Home() {
   const dotProm2 = () => {
     setDotColor("text-green-400");
     if (isRepeat) {
-      setDotSaying("Repeated letter deactivated");
+      setDotSaying("Repeated letters deactivated!");
     } else {
-      setDotSaying("Repeated letter activated!");
+      setDotSaying("Repeated letters activated!");
     }
+    setDotKey((prev) => prev + 1);
   };
   const dotProm3 = () => {
     if (isCheating) {
@@ -182,7 +178,7 @@ export default function Home() {
                 // Get the feedback for this guess and letter
                 const feedback = guessResults[wordIndex]?.[letterIndex] || "absent";
                 const bgColor =
-                  feedback === "correct" ? "bg-green-600" : feedback === "present" ? "bg-yellow-600" : "bg-gray-600";
+                  feedback === "correct" ? "bg-green-600" : feedback === "present" ? "bg-yellow-600" : "bg-red-600";
 
                 return (
                   letter.trim() !== "" && (
@@ -203,7 +199,7 @@ export default function Home() {
         <input
           type="text"
           placeholder="Type your word here"
-          className="focus:outline-none border-none uppercase placeholder:normal-case disabled:bg-gray-100 disabled:text-gray-500"
+          className="focus:outline-none border-none uppercase placeholder:normal-case"
           value={typingValue}
           disabled={isGameWon}
           onChange={(e) => {
@@ -232,6 +228,11 @@ export default function Home() {
               <button
                 onClick={() => {
                   setRepeat(!isRepeat);
+                  // Reset game when repeat mode changes
+                  setUserInputs([]);
+                  setGuessResults([]);
+                  setIsGameWon(false);
+                  setTypingValue("");
                   dotProm2();
                 }}
                 className="bg-neutral-800 pl-3 pr-1 py-1 text-white rounded-full hover:bg-neutral-700 cursor-pointer transition-all duration-300 text-center flex items-center gap-2 relative overflow-hidden">

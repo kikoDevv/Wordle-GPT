@@ -1,16 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { compare, getWordsByLength, getRandomWord } from "@/lib/data/wordService";
 
-const gameState: { [wordLength: number]: { targetWord: string; isGameWon: boolean } } = {};
+// In-memory game state storage (per word length and repeat mode)
+const gameState: { [key: string]: { targetWord: string; isGameWon: boolean } } = {};
 
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
     const wordLength = data.wordLengh;
     const userInput = data.userInput;
+    const isRepeat = data.isRepeat || false;
 
     console.log("-------selected length--------", wordLength);
     console.log("-------user input--------", userInput);
+    console.log("-------repeat mode--------", isRepeat);
 
     /*------------------- Validate input -------------------*/
     if (!userInput || typeof userInput !== 'string') {
@@ -22,28 +25,31 @@ export async function POST(request: NextRequest) {
 
     if (userInput.length !== wordLength) {
       return NextResponse.json(
-        { error: `Input must be exactly ${wordLength} characters long` },
+        { error: `Input must be ${wordLength} long` },
         { status: 400 }
       );
     }
 
-    if (!gameState[wordLength] || gameState[wordLength].isGameWon) {
-      const words = getWordsByLength(wordLength, false);
+    // Create a unique key for game state based on word length and repeat mode
+    const gameKey = `${wordLength}_${isRepeat}`;
+
+    if (!gameState[gameKey] || gameState[gameKey].isGameWon) {
+      const words = getWordsByLength(wordLength, isRepeat);
       if (words.length === 0) {
         return NextResponse.json(
-          { error: `No words available for length ${wordLength}` },
+          { error: `No words for length ${wordLength}${isRepeat ? ' with repeated letters' : ''}` },
           { status: 400 }
         );
       }
       const targetWord = getRandomWord(words);
-      gameState[wordLength] = {
+      gameState[gameKey] = {
         targetWord: targetWord,
         isGameWon: false
       };
       console.log("-------new target word set--------", targetWord);
     }
 
-    const target = gameState[wordLength].targetWord;
+    const target = gameState[gameKey].targetWord;
     console.log("-------current target--------", target);
 
     const result = compare(target, userInput);
@@ -52,7 +58,7 @@ export async function POST(request: NextRequest) {
     /*------------------- Check if game is won -------------------*/
     const isWon = result.every((status) => status === "correct");
     if (isWon) {
-      gameState[wordLength].isGameWon = true;
+      gameState[gameKey].isGameWon = true;
       console.log("-------game won!--------");
     }
 
