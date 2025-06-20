@@ -12,14 +12,14 @@ const compare = (selectedWord: string, guessedWord: string): string[] => {
     const selectedLetter = selectedLetters[i];
 
     if (guessLetter === selectedLetter) {
-      // Letter is in correct position (green)
+      // Letter is in correct position
       result.push("correct");
     } else if (selectedLetters.includes(guessLetter)) {
-      // Letter is in word but wrong position (yellow)
+      // Letter is in word but wrong position
       result.push("misplaced");
     } else {
-      // Letter is not in word (gray)
-      result.push("wrogn");
+      // Letter is not in word
+      result.push("wrong");
     }
   }
 
@@ -44,9 +44,9 @@ const getWordsByLength = (wordsLength: number, repeat: boolean): string[] => {
   }
 };
 /*------------------- get a random word and return word latters -------------------*/
-const getRandomWord = (words: string[]): string[] => {
+const getRandomWord = (words: string[]): string => {
   const randomIndex = Math.floor(Math.random() * words.length);
-  return words[randomIndex].split("");
+  return words[randomIndex];
 };
 
 /*------------------- Export Functions -------------------*/

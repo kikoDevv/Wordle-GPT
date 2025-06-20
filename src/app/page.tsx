@@ -13,11 +13,27 @@ export default function Home() {
   const [isRepeat, setRepeat] = useState(false);
   const [isCheating, setCheating] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
+  const randomWordLenght = Math.floor(Math.random() * (6 - 2 + 1)) + 2;
+  const [selectedWordLength, setSelectedWordLength] = useState(randomWordLenght);
+
+  {
+    /*--------- logic for random wordLenght ----------*/
+  }
+  const handleWordLengthChange = (length: number) => {
+    console.log("word lenght changed!");
+    if (length === 0) {
+      setSelectedWordLength(randomWordLenght);
+      setDotSaying (`Word length has changed to ${randomWordLenght}`);
+    } else {
+      setSelectedWordLength(length);
+      setDotSaying (`Word length has changed to ${length}`);
+    }
+  };
   {
     /*--------- functions ----------*/
   }
   const createNewGame = () => {
-    setIsSpinning(true); // Start continuous spinning
+    setIsSpinning(true);
     setTimeout(() => {
       window.location.reload();
     }, 4000);
@@ -32,24 +48,32 @@ export default function Home() {
   const saveUserInput = async () => {
     if (typingValue.trim() !== "") {
       setUserInputs((prev) => [...prev, typingValue.trim()]);
-      {/*--------- game/route ----------*/}
+      {
+        /*--------- game/route ----------*/
+      }
       const response = await fetch("/api/game", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ guess: typingValue.trim() }),
       });
-      {/*--------- Resived respons from game route ----------*/}
+      {
+        /*--------- Resived respons from game route ----------*/
+      }
       const data = await response.json();
       console.log("client: Time received from api:", data.receivedAt);
       console.log("Client: resived userInput from api", data.receivedInput);
-      console.log("Client: gererated gameID--> ", data.gameId)
-      {/*--------- guess/route ----------*/}
+      console.log("Client: gererated gameID--> ", data.gameId);
+      {
+        /*--------- guess/route ----------*/
+      }
       const res = await fetch("api/guess", {
         method: "POST",
-        headers: {"Content-type": "application/json"},
-        body: JSON.stringify({guess: typingValue.trim()}),
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({ guess: typingValue.trim(), wordLengh: selectedWordLength }),
       });
-      {/*--------- Resived respons from guess route ----------*/}
+      {
+        /*--------- Resived respons from guess route ----------*/
+      }
       const validation = await res.json();
       console.log("Client: Resived validation from guess--->", validation);
       setTypingValue("");
@@ -130,7 +154,12 @@ export default function Home() {
           placeholder="Type your word here"
           className="focus:outline-none border-none uppercase placeholder:normal-case"
           value={typingValue}
-          onChange={(e) => setTypingValue(e.target.value.toUpperCase())}
+          onChange={(e) => {
+            const newValue = e.target.value.toUpperCase();
+            if (newValue.length <= selectedWordLength) {
+              setTypingValue(newValue);
+            }
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               if (typingValue.trim() !== "") {
@@ -195,7 +224,7 @@ export default function Home() {
             {/*---------drop down menu, wordlenght button-----------*/}
             <div className="relative w-24">
               <div className="absolute w-full">
-                <DropDown />
+                <DropDown onWordLengthChange={handleWordLengthChange} />
               </div>
             </div>
             {/*--------- new game button ----------*/}

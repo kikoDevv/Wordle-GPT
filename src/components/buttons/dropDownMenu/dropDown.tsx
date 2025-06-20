@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import { PiShuffle } from "react-icons/pi";
 
-export default function DropDown() {
+interface DropDownProps {
+  onWordLengthChange?: (length: number) => void;
+}
+
+export default function DropDown({ onWordLengthChange }: DropDownProps) {
   const [isDropDownOpen, setDropDownOpen] = useState(false);
   const [wordLength, setWordLength] = useState(0);
 
   const handleWordLengthSelect = (length: number) => {
     setWordLength(length);
     setDropDownOpen(false);
+    onWordLengthChange?.(length);
   };
 
   return (
