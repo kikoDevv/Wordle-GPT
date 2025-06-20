@@ -23,10 +23,10 @@ export default function Home() {
     console.log("word lenght changed!");
     if (length === 0) {
       setSelectedWordLength(randomWordLenght);
-      setDotSaying (`Word length has changed to ${randomWordLenght}`);
+      setDotSaying(`Word length has changed to ${randomWordLenght}`);
     } else {
       setSelectedWordLength(length);
-      setDotSaying (`Word length has changed to ${length}`);
+      setDotSaying(`Word length has changed to ${length}`);
     }
   };
   {
@@ -69,13 +69,16 @@ export default function Home() {
       const res = await fetch("api/guess", {
         method: "POST",
         headers: { "Content-type": "application/json" },
-        body: JSON.stringify({ guess: typingValue.trim(), wordLengh: selectedWordLength }),
+        body: JSON.stringify({
+          guess: typingValue.trim(),
+          wordLengh: selectedWordLength,
+        }),
       });
       {
         /*--------- Resived respons from guess route ----------*/
       }
       const validation = await res.json();
-      console.log("Client: Resived validation from guess--->", validation);
+      console.log("Client: Resived validation from guess--->", validation.gameStatus);
       setTypingValue("");
     }
   };
