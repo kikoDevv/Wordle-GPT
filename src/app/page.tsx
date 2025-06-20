@@ -28,17 +28,22 @@ export default function Home() {
   const [userInputs, setUserInputs] = useState<string[]>([]);
   const [typingValue, setTypingValue] = useState("");
 
+  //------------------Send user input and resive respons from backend-----------------
   const saveUserInput = async () => {
     if (typingValue.trim() !== "") {
       setUserInputs((prev) => [...prev, typingValue.trim()]);
 
-      //--------------send user input to api-----------
-      await fetch("/api/game", {
+      const response = await fetch("/api/game", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ guess: typingValue.trim() }),
       });
 
+      {/*--------- Resived respons from BackEnd ----------*/}
+      const data = await response.json();
+      console.log("client: Time received from api:", data.receivedAt);
+      console.log("Client: resived userInput from api", data.receivedInput);
+      console.log("Client: gererated gameID--> ", data.gameId)
       setTypingValue("");
     }
   };
