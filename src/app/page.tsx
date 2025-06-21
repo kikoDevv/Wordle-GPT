@@ -59,13 +59,6 @@ export default function Home() {
   //------------------Send user input and resive respons from backend-----------------
   const saveUserInput = async () => {
     if (typingValue.trim() !== "") {
-      if (typingValue.length !== selectedWordLength) {
-        setDotSaying(`Input must be ${selectedWordLength} long!`);
-        setDotColor("text-red-500");
-        setDotKey((prev) => prev + 1);
-        return;
-      }
-
       setUserInputs((prev) => [...prev, typingValue.trim()]);
 
       try {
@@ -101,11 +94,9 @@ export default function Home() {
         if (data.isWon) {
           setIsGameWon(true);
           setDotSaying(`🎉 Nicely done! You guessed the word: ${data.targetWord}`);
-          setDotColor("text-green-400");
           setDotKey((prev) => prev + 1);
         } else {
           setDotSaying("Wrong! Keep trying!");
-          setDotColor("text-blue-400");
           setDotKey((prev) => prev + 1);
         }
       } catch (error) {
@@ -211,8 +202,14 @@ export default function Home() {
           onKeyDown={(e) => {
             if (e.key === "Enter" && !isGameWon) {
               if (typingValue.trim() !== "") {
-                saveUserInput();
-                dotPromp1();
+                if (typingValue.length !== selectedWordLength) {
+                  setDotSaying(`Please type ${selectedWordLength}letter!`);
+                  setDotColor("text-yellow-700");
+                  setDotKey((prev) => prev + 1);
+                } else {
+                  saveUserInput();
+                  dotPromp1();
+                }
               } else {
                 dotPromp0();
               }
@@ -309,8 +306,14 @@ export default function Home() {
             disabled={isGameWon}
             onClick={() => {
               if (!isGameWon && typingValue.trim() !== "") {
-                saveUserInput();
-                dotPromp1();
+                if (typingValue.length !== selectedWordLength) {
+                  setDotSaying(`Type the all ${selectedWordLength} letter word!`);
+                  setDotColor("text-orange-500");
+                  setDotKey((prev) => prev + 1);
+                } else {
+                  saveUserInput();
+                  dotPromp1();
+                }
               } else if (!isGameWon) {
                 dotPromp0();
               }
