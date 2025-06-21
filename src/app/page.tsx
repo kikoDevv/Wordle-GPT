@@ -76,8 +76,8 @@ export default function Home() {
         const data = await res.json();
 
         if (!res.ok) {
-          setDotSaying(data.error || "Something went wrong!");
           setDotColor("text-red-500");
+          setDotSaying(data.error || "Something went wrong!");
           setDotKey((prev) => prev + 1);
           // Remove the input from the list since it was invalid
           setUserInputs((prev) => prev.slice(0, -1));
@@ -96,6 +96,7 @@ export default function Home() {
           setDotSaying(`🎉 Nicely done! You guessed the word: ${data.targetWord}`);
           setDotKey((prev) => prev + 1);
         } else {
+          setDotColor("text-white");
           setDotSaying("Wrong! Keep trying!");
           setDotKey((prev) => prev + 1);
         }
@@ -122,15 +123,10 @@ export default function Home() {
     setDotColor("text-red-500");
     setDotKey((prev) => prev + 1);
   };
-  const dotPromp1 = () => {
-    setDotSaying("The game is on!");
-    setDotColor("text-white");
-    setDotKey((prev) => prev + 1);
-  };
   const dotProm2 = () => {
     setDotColor("text-green-400");
     if (isRepeat) {
-      setDotColor("text-white")
+      setDotColor("text-white");
       setDotSaying("Repeated letters deactivated!");
     } else {
       setDotSaying("Repeated letters activated!");
@@ -139,10 +135,10 @@ export default function Home() {
   };
   const dotProm3 = () => {
     if (isCheating) {
-      setDotColor("text-white")
+      setDotColor("text-white");
       setDotSaying("Cheat mode deactivated!");
     } else {
-      setDotColor("text-yellow-700")
+      setDotColor("text-yellow-700");
       setDotSaying("You nasty, Cheat mode activated!");
     }
   };
@@ -211,7 +207,6 @@ export default function Home() {
                   setDotKey((prev) => prev + 1);
                 } else {
                   saveUserInput();
-                  dotPromp1();
                 }
               } else {
                 dotPromp0();
@@ -315,7 +310,6 @@ export default function Home() {
                   setDotKey((prev) => prev + 1);
                 } else {
                   saveUserInput();
-                  dotPromp1();
                 }
               } else if (!isGameWon) {
                 dotPromp0();
