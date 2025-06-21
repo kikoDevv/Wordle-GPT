@@ -70,6 +70,7 @@ export default function Home() {
             userInput: typingValue.trim(),
             wordLengh: selectedWordLength,
             isRepeat: isRepeat,
+            cheatMode: isCheating,
           }),
         });
 
@@ -79,7 +80,6 @@ export default function Home() {
           setDotColor("text-red-500");
           setDotSaying(data.error || "Something went wrong!");
           setDotKey((prev) => prev + 1);
-          // Remove the input from the list since it was invalid
           setUserInputs((prev) => prev.slice(0, -1));
           return;
         }
@@ -98,6 +98,11 @@ export default function Home() {
         } else {
           setDotColor("text-white");
           setDotSaying("Wrong! Keep trying!");
+          setDotKey((prev) => prev + 1);
+        }
+        if (data.cheatMessage !== undefined){
+          setDotColor("text-red-700");
+          setDotSaying(`You nasty: ${data.cheatMessage}`);
           setDotKey((prev) => prev + 1);
         }
       } catch (error) {
@@ -133,13 +138,35 @@ export default function Home() {
     }
     setDotKey((prev) => prev + 1);
   };
-  const dotProm3 = () => {
+  const dotProm3 = async () => {
     if (isCheating) {
       setDotColor("text-white");
       setDotSaying("Cheat mode deactivated!");
     } else {
       setDotColor("text-yellow-700");
-      setDotSaying("You nasty, Cheat mode activated!");
+
+      {/*--------- Immediately fetch and reveal the target word ----------*/}
+      try {
+        const res = await fetch("api/guess", {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({
+            userInput: "A".repeat(selectedWordLength),
+            wordLengh: selectedWordLength,
+            isRepeat: isRepeat,
+            cheatMode: true,
+          }),
+        });
+
+        const data = await res.json();
+        if (data.cheatMessage) {
+          setDotColor("text-red-700");
+          setDotSaying(`You nasty: ${data.cheatMessage}`);
+          setDotKey((prev) => prev + 1);
+        }
+      } catch (error) {
+        console.error("Error fetching target word:", error);
+      }
     }
   };
   const dotProm5 = () => {

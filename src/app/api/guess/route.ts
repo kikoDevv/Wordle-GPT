@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { compare, getWordsByLength, getRandomWord } from "@/lib/data/wordService";
 
-// In-memory game state storage (per word length and repeat mode)
 const gameState: { [key: string]: { targetWord: string; isGameWon: boolean } } = {};
 
 export async function POST(request: NextRequest) {
@@ -10,6 +9,7 @@ export async function POST(request: NextRequest) {
     const wordLength = data.wordLengh;
     const userInput = data.userInput;
     const isRepeat = data.isRepeat || false;
+    const cheatMode = data.cheatMode;
 
     console.log("-------selected length--------", wordLength);
     console.log("-------user input--------", userInput);
@@ -65,7 +65,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       feedback: result,
       isWon: isWon,
-      targetWord: isWon ? target : undefined
+      targetWord: isWon ? target : undefined,
+      cheatMessage: cheatMode ? `Target word is "${target}"` : undefined
     });
 
   } catch (error) {
