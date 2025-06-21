@@ -44,13 +44,6 @@ export default function DropDown({ onWordLengthChange }: DropDownProps) {
           <li>
             <button
               className="cursor-pointer hover:bg-neutral-600 w-full rounded-md py-1 bg-neutral-700 transition-colors"
-              onClick={() => handleWordLengthSelect(1)}>
-              1
-            </button>
-          </li>
-          <li>
-            <button
-              className="cursor-pointer hover:bg-neutral-600 w-full rounded-md py-1 bg-neutral-700 transition-colors"
               onClick={() => handleWordLengthSelect(2)}>
               2
             </button>

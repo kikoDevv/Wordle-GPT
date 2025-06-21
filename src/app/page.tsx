@@ -25,12 +25,12 @@ export default function Home() {
 
     if (length === 0) {
       setSelectedWordLength(randomWordLenght);
-      setDotSaying(`Length changed to ${randomWordLenght}.Game started!`);
+      setDotSaying(`Length changed to ${randomWordLenght} latters!`);
     } else {
       setSelectedWordLength(length);
-      setDotSaying(`Length changed to ${length}.Game started!`);
+      setDotSaying(`Length changed to ${length} Latters!`);
     }
-    setDotColor("text-blue-400");
+    setDotColor("text-green-400");
     setDotKey((prev) => prev + 1);
   };
 
@@ -130,6 +130,7 @@ export default function Home() {
   const dotProm2 = () => {
     setDotColor("text-green-400");
     if (isRepeat) {
+      setDotColor("text-white")
       setDotSaying("Repeated letters deactivated!");
     } else {
       setDotSaying("Repeated letters activated!");
@@ -138,8 +139,10 @@ export default function Home() {
   };
   const dotProm3 = () => {
     if (isCheating) {
+      setDotColor("text-white")
       setDotSaying("Cheat mode deactivated!");
     } else {
+      setDotColor("text-yellow-700")
       setDotSaying("You nasty, Cheat mode activated!");
     }
   };
