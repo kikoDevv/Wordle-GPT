@@ -15,7 +15,6 @@ export default function Home() {
   const [selectedWordLength, setSelectedWordLength] = useState(randomWordLenght);
   /*--------- game status ----------*/
   const [tryCont, setTryCount] = useState(0);
-  const [targetWord, setTargetWord] = useState("");
 
   /*--------- logic for random wordLenght ----------*/
 
