@@ -10,7 +10,7 @@ export default function page() {
       <div className="grid">
         {/*--------- header dot section ----------*/}
         <section className="flex justify-center bg-neutral-700 p-2 mb-1 rounded-t-2xl ml-10 mr-10">
-          <Dot text="Welcome to leader board" dotColor="bg-white" textColor="text-white" speed={50} />
+          <Dot text="Welcome to leader board" dotColor="bg-white" textColor="text-xs" speed={50}/>
         </section>
         {/*--------- main logo section ----------*/}
         <section className="grid bg-neutral-700 rounded-4xl p-7">

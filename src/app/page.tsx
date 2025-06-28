@@ -13,6 +13,8 @@ export default function Home() {
   const [isSpinning, setIsSpinning] = useState(false);
   const randomWordLenght = Math.floor(Math.random() * (6 - 2 + 1)) + 2;
   const [selectedWordLength, setSelectedWordLength] = useState(randomWordLenght);
+  /*--------- game status ----------*/
+  const [tryCont, setTryCount] = useState(0);
 
   /*--------- logic for random wordLenght ----------*/
 
@@ -25,10 +27,12 @@ export default function Home() {
 
     if (length === 0) {
       setSelectedWordLength(randomWordLenght);
-      setDotSaying(`Length changed to ${randomWordLenght} latters!`);
+      setDotSaying(`Length changed to random!`);
+      setTryCount(0);
     } else {
       setSelectedWordLength(length);
       setDotSaying(`Length changed to ${length} Latters!`);
+      setTryCount(0);
     }
     setDotColor("text-green-400");
     setDotKey((prev) => prev + 1);
@@ -90,15 +94,23 @@ export default function Home() {
         // Store the feedback for this guess
         setGuessResults((prev) => [...prev, data.feedback]);
 
-        // Check if game is won
+        /*--------- on game won ----------*/
         if (data.isWon) {
           setIsGameWon(true);
           setDotSaying(`🎉 Nicely done! You guessed the word: ${data.targetWord}`);
           setDotKey((prev) => prev + 1);
+
+          /*--------- On game complete send data to db ----------*/
+          fetch("api/db", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ trys: tryCont + 1 })
+          });
         } else {
           setDotColor("text-white");
           setDotSaying("Wrong! Keep trying!");
           setDotKey((prev) => prev + 1);
+          setTryCount(tryCont + 1);
         }
         if (data.cheatMessage !== undefined){
           setDotColor("text-red-700");
@@ -110,16 +122,13 @@ export default function Home() {
         setDotSaying("Connection error! Please try again.");
         setDotColor("text-red-500");
         setDotKey((prev) => prev + 1);
-        // Remove the input from the list since there was an error
         setUserInputs((prev) => prev.slice(0, -1));
       }
 
       setTypingValue("");
     }
   };
-
   /*--------- Dots proms logic ----------*/
-
   const [isDotSaying, setDotSaying] = useState("Welcome to Wordle-GPT");
   const [DotColor, setDotColor] = useState("text-white");
   const [dotKey, setDotKey] = useState(0);
@@ -133,8 +142,10 @@ export default function Home() {
     if (isRepeat) {
       setDotColor("text-white");
       setDotSaying("Repeated letters deactivated!");
+      setTryCount(0);
     } else {
       setDotSaying("Repeated letters activated!");
+      setTryCount(0);
     }
     setDotKey((prev) => prev + 1);
   };
@@ -161,7 +172,7 @@ export default function Home() {
         const data = await res.json();
         if (data.cheatMessage) {
           setDotColor("text-red-700");
-          setDotSaying(`You nasty: ${data.cheatMessage}`);
+          setDotSaying(`${data.cheatMessage}`);
           setDotKey((prev) => prev + 1);
         }
       } catch (error) {
@@ -170,8 +181,11 @@ export default function Home() {
     }
   };
   const dotProm5 = () => {
+    setTryCount(0);
     setDotSaying("New game is about to start!");
   };
+
+
 
   return (
     <div className="grid w-full justify-center">
