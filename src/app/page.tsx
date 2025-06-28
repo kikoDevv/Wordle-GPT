@@ -102,7 +102,7 @@ export default function Home() {
         }
         if (data.cheatMessage !== undefined){
           setDotColor("text-red-700");
-          setDotSaying(`You nasty: ${data.cheatMessage}`);
+          setDotSaying(`${data.cheatMessage}`);
           setDotKey((prev) => prev + 1);
         }
       } catch (error) {

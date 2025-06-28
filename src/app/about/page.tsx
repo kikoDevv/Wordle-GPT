@@ -27,7 +27,7 @@ export default function AboutPage() {
   return (
     <div className="grid w-full justify-center">
       {/*--------- About header section ----------*/}
-      <section className="self-end mb-2 px-10">
+      <section className="self-end mb-1 px-10">
         <div className="flex flex-col gap-2 w-full bg-neutral-600 rounded-t-2xl py-2">
           {/*--------- About dot UI ----------*/}
           <div className="flex w-full justify-center">
