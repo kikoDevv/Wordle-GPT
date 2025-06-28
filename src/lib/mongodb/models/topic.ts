@@ -1,16 +1,15 @@
-import { timeStamp } from "console";
-import monsoose, { Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const topicSchema = new Schema(
+const gameSession = new Schema(
   {
-    userName: string,
-    trys: number,
+    userName: String,
+    trys: Number,
   },
   {
-    timeStamp: true,
+    timestamps: true,
   }
 );
 
-const Topic = mongooose.models.Topic || SiMongoose.model("Topic", topicSchema);
+const game = mongoose.models.game || mongoose.model("game", gameSession);
 
-export default Topic;
+export default game;

@@ -15,6 +15,7 @@ export default function Home() {
   const [selectedWordLength, setSelectedWordLength] = useState(randomWordLenght);
   /*--------- game status ----------*/
   const [tryCont, setTryCount] = useState(0);
+  const [userName, setUserName] = useState("");
 
   /*--------- logic for random wordLenght ----------*/
 
@@ -97,22 +98,18 @@ export default function Home() {
         /*--------- on game won ----------*/
         if (data.isWon) {
           setIsGameWon(true);
-          setDotSaying(`🎉 Nicely done! You guessed the word: ${data.targetWord}`);
+          if (isCheating) {
+            setDotColor("text-white");
+            setDotSaying(`🎉 Nicely done, you won!`);
+          }
           setDotKey((prev) => prev + 1);
-
-          /*--------- On game complete send data to db ----------*/
-          fetch("api/db", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ trys: tryCont + 1 })
-          });
         } else {
           setDotColor("text-white");
           setDotSaying("Wrong! Keep trying!");
           setDotKey((prev) => prev + 1);
           setTryCount(tryCont + 1);
         }
-        if (data.cheatMessage !== undefined){
+        if (data.cheatMessage !== undefined && !data.isWon) {
           setDotColor("text-red-700");
           setDotSaying(`${data.cheatMessage}`);
           setDotKey((prev) => prev + 1);
@@ -156,7 +153,9 @@ export default function Home() {
     } else {
       setDotColor("text-yellow-700");
 
-      {/*--------- Immediately fetch and reveal the target word ----------*/}
+      {
+        /*--------- Immediately fetch and reveal the target word ----------*/
+      }
       try {
         const res = await fetch("api/guess", {
           method: "POST",
@@ -185,8 +184,9 @@ export default function Home() {
     setDotSaying("New game is about to start!");
   };
 
-
-
+  {
+    /*----------------------------------------- Root --------------------------------------------*/
+  }
   return (
     <div className="grid w-full justify-center">
       {/*--------- input value section ----------*/}
@@ -229,14 +229,17 @@ export default function Home() {
       <div className="grid bg-neutral-600 p-3 rounded-3xl self-start">
         <input
           type="text"
-          placeholder="Type your word here"
+          placeholder={isGameWon ? "Enter your name" : "Type your word here"}
           className="focus:outline-none border-none uppercase placeholder:normal-case"
           value={typingValue}
-          disabled={isGameWon}
           onChange={(e) => {
-            const newValue = e.target.value.toUpperCase();
-            if (newValue.length <= selectedWordLength) {
-              setTypingValue(newValue);
+            if (isGameWon) {
+              setTypingValue(e.target.value);
+            } else {
+              const newValue = e.target.value.toUpperCase();
+              if (newValue.length <= selectedWordLength) {
+                setTypingValue(newValue);
+              }
             }
           }}
           onKeyDown={(e) => {
@@ -251,6 +254,21 @@ export default function Home() {
                 }
               } else {
                 dotPromp0();
+              }
+            }
+            if (e.key === "Enter" && isGameWon) {
+              if (typingValue.trim() !== "") {
+                setUserName(typingValue);
+                fetch("api/db", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ trys: tryCont + 1, userName: typingValue.trim() }),
+                });
+                setDotSaying("Your score is saved and the game will be restarted");
+                setTypingValue("");
+                setTimeout(() => {
+                  window.location.reload();
+                }, 4000);
               }
             }
           }}
@@ -337,12 +355,7 @@ export default function Home() {
           </section>
           {/*--------- send button ----------*/}
           <button
-            className={`px-2 py-2 rounded-full cursor-pointer transition-all duration-300 ${
-              isGameWon
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-white hover:bg-green-400 hover:scale-109 hover:text-amber-100"
-            }`}
-            disabled={isGameWon}
+            className="px-2 py-2 rounded-full cursor-pointer transition-all duration-300 bg-white hover:bg-green-400 hover:scale-109 hover:text-amber-100"
             onClick={() => {
               if (!isGameWon && typingValue.trim() !== "") {
                 if (typingValue.length !== selectedWordLength) {
@@ -354,6 +367,18 @@ export default function Home() {
                 }
               } else if (!isGameWon) {
                 dotPromp0();
+              } else if (isGameWon && typingValue.trim() !== "") {
+                setUserName(typingValue);
+                fetch("api/db", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ trys: tryCont + 1, userName: typingValue.trim() }),
+                });
+                setDotSaying("Your score is saved and the game will be restarted");
+                setTypingValue("");
+                setTimeout(() => {
+                  window.location.reload();
+                }, 4000);
               }
             }}>
             <IoSendSharp className="scale-140 rotate-270 hover:scale-150" />
