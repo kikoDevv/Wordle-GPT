@@ -15,7 +15,7 @@ export default function Home() {
   const [selectedWordLength, setSelectedWordLength] = useState(randomWordLenght);
   /*--------- game status ----------*/
   const [tryCont, setTryCount] = useState(0);
-  const [userName, setUserName] = useState("");
+  const [targetWord, setTargetWord] = useState("");
 
   /*--------- logic for random wordLenght ----------*/
 
@@ -258,11 +258,10 @@ export default function Home() {
             }
             if (e.key === "Enter" && isGameWon) {
               if (typingValue.trim() !== "") {
-                setUserName(typingValue);
                 fetch("api/db", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ trys: tryCont + 1, userName: typingValue.trim() }),
+                  body: JSON.stringify({ trys: tryCont + 1, userName: typingValue.trim(), wordLength: selectedWordLength, targetWord: userInputs[userInputs.length -1], unique: isRepeat }),
                 });
                 setDotSaying("Your score is saved and the game will be restarted");
                 setTypingValue("");
@@ -368,11 +367,10 @@ export default function Home() {
               } else if (!isGameWon) {
                 dotPromp0();
               } else if (isGameWon && typingValue.trim() !== "") {
-                setUserName(typingValue);
                 fetch("api/db", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ trys: tryCont + 1, userName: typingValue.trim() }),
+                  body: JSON.stringify({ trys: tryCont + 1, userName: typingValue.trim(), wordLength: selectedWordLength, targetWord: userInputs[userInputs.length -1], unique: isRepeat }),
                 });
                 setDotSaying("Your score is saved and the game will be restarted");
                 setTypingValue("");
